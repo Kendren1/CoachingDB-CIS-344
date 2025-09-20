@@ -1,0 +1,48 @@
+DROP DATABASE IF EXISTS CoachingDB;
+CREATE DATABASE CoachingDB;
+USE CoachingDB;
+
+CREATE TABLE Coach (
+    CoachID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(150) NOT NULL UNIQUE,
+    Expertise VARCHAR(255)
+);
+
+CREATE TABLE Client (
+    ClientID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(150) NOT NULL UNIQUE,
+    Phone VARCHAR(20)
+);
+
+CREATE TABLE Session (
+    SessionID INT AUTO_INCREMENT PRIMARY KEY,
+    CoachID INT NOT NULL,
+    ClientID INT NOT NULL,
+    SessionDate DATETIME NOT NULL,
+    Duration INT, 
+    Status VARCHAR(50),
+    FOREIGN KEY (CoachID) REFERENCES Coach(CoachID),
+    FOREIGN KEY (ClientID) REFERENCES Client(ClientID)
+);
+
+CREATE TABLE Payment (
+    PaymentID INT AUTO_INCREMENT PRIMARY KEY,
+    SessionID INT NOT NULL,
+    PaymentDate DATE NOT NULL,
+    Amount DECIMAL(10,2) NOT NULL,
+    PaymentMethod VARCHAR(50),
+    PaymentStatus VARCHAR(50),
+    FOREIGN KEY (SessionID) REFERENCES Session(SessionID)
+);
+
+CREATE TABLE Feedback (
+    FeedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    SessionID INT NOT NULL,
+    ClientID INT NOT NULL,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    Comments TEXT,
+    FOREIGN KEY (SessionID) REFERENCES Session(SessionID),
+    FOREIGN KEY (ClientID) REFERENCES Client(ClientID)
+);
